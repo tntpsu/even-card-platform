@@ -17,3 +17,9 @@ export { SUITS, RANKS, SUIT_GLYPH, renderCard, cardKey, rankValue, cardEq } from
 export type { Card, Suit, Rank } from './card'
 
 export { freshDeck, deckFromRanks, shuffle, deal, drawTop } from './deck'
+
+export { renderHandRow } from './hand-row'
+export type { HandRowOptions } from './hand-row'
+
+export { renderPlusTrick } from './plus-trick'
+export type { Position, PlusTrickPlay, PlusTrickOptions } from './plus-trick'
