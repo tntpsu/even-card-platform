@@ -12,3 +12,8 @@ export type {
   PhoneEvent, PlatformContext,
   Difficulty,
 } from './types'
+
+export { SUITS, RANKS, SUIT_GLYPH, renderCard, cardKey, rankValue, cardEq } from './card'
+export type { Card, Suit, Rank } from './card'
+
+export { freshDeck, deckFromRanks, shuffle, deal, drawTop } from './deck'
