@@ -1,0 +1,30 @@
+{
+  "name": "even-card-platform",
+  "version": "0.1.0",
+  "description": "Shared platform (chrome, launcher, card primitives, style guide) for Even Realities G2 card-game packs. Consumed by CardPack and HouseGames.",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
+  },
+  "license": "MIT",
+  "author": "Phil Tullai",
+  "keywords": [
+    "even-realities",
+    "evenhub",
+    "g2-glasses",
+    "card-games",
+    "platform"
+  ]
+}
