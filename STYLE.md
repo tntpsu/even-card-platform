@@ -61,12 +61,15 @@ Two-space separator between actions. No periods, no caps.
 
 | Game category | Format | Example |
 |---|---|---|
-| **trick** (Hearts, Spades, Euchre) | `US <ns>-<ew> THEM` | `US 13-7 THEM` |
+| **trick — partnership** (Spades, Euchre) | `US <ns>-<ew> THEM` | `US 13-7 THEM` |
+| **trick — solo** (Hearts) | `S:<n> W:<n> N:<n> E:<n>` | `S:0 W:0 N:5 E:3` |
 | **shed** (Crazy Eights, Gin Rummy) | `YOU <a>  THEM <b>` (single opponent) or `S:<a> W:<b> N:<c> E:<d>` | `YOU 32  THEM 41` |
 | **pegging** (Cribbage) | `US <pts>  THEM <pts>  /<target>` | `US 89  THEM 76  /121` |
 | **patience** (Solitaire) | `MOVES <n>  TIME <m:ss>` | `MOVES 47  TIME 3:12` |
 | **casino-card** (Blackjack, Video Poker, Three Card Poker) | `YOU $<bal>  BET $<bet>` | `YOU $185  BET $25` |
 | **casino-wheel** (Roulette) | `YOU $<bal>  BET $<total>` | `YOU $200  BET $15` |
+
+Partnership games communicate teams through the score format alone (`US`/`THEM`). Solo-multiplayer games (Hearts) list per-player scores so the user can see opponents' standings at a glance — Hearts strategy depends on knowing who's at risk of shooting the moon.
 
 Dollar signs without commas. No negative balances — a bankrupt bankroll resets after a "GAME OVER" banner.
 
@@ -107,6 +110,40 @@ Used to label position-relative or role-relative info:
 ```
 
 Always parenthesized, always lowercase. Appear after the position label: `S (me)`, `N (D)`.
+
+### Four-player trick layout
+
+Trick-category games (Hearts, Spades, Euchre) render the active trick as a three-line plus-sign that mirrors a card table sitting in front of the player:
+
+```
+         N: <card>             ← partner (centered)
+W: <card>          E: <card>   ← opponents (left + right)
+         S: <card>             ← you (centered, always (me) marker)
+```
+
+The spatial pattern IS the message:
+- **Partner is across the canvas** from you. Communicated by position, not by a `(partner)` marker — that would be noise.
+- **Opponents are on the sides**. Same principle.
+- **You are at the bottom**, where your hand row visually grows from.
+
+Empty positions (player hasn't played yet) show `-`. Position markers stack inside parens per the previous section: `S(me,D,M)` when you dealt and called trump. The leader of the current trick (Hearts) gets `(led)`.
+
+When the 4th card lands, the trick view **lingers** for ~1 s before clearing so the user can see all four cards before the winner leads the next trick. Without the linger, the trick clears before the human can read it.
+
+**Pixel layout**: each row is padded to `PLUS_WIDTH_PX = 360 px` (about half the 576 px display, centered on the canvas) using `@evenrealities/pretext` for proportional-font width measurement. Don't compute widths via string-length — the firmware font is proportional, not monospace (see `~/Documents/CLAUDE.md` and `KNOWN_QUIRKS.md` for the gory details).
+
+**Platform export**: games don't reimplement this. The platform exports:
+
+```ts
+renderPlusTrick(
+  plays: Array<{ pos: Position; card: Card | null }>,
+  getMarker: (pos: Position) => string,   // e.g. 'me', 'D,M', 'led'
+): string[]
+```
+
+Three lines back. Game wraps it with its own meta line above (Trump indicator, bid info, etc.) and the hand row below.
+
+**Why not show the full 4-trick history**: the G2 budget doesn't allow it. The plus-sign shows only the *current* trick. Past tricks live in the score (`US 13-7 THEM` already tells you who won what). If a player needs to review past tricks, that's a phone-side feature, not a glasses-side one.
 
 ### End-of-hand / end-of-game banners
 
