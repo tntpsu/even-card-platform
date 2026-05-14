@@ -56,34 +56,8 @@ describe('composeGlassesFrame', () => {
     expect(bannerIdx).toBeLessThan(footerIdx)
   })
 
-  it('overlay=exit-to-menu replaces body with the menu prompt', () => {
-    const out = composeGlassesFrame({
-      gameName: 'Hearts',
-      frame: FRAME,
-      overlay: { kind: 'exit-to-menu' },
-    })
-    expect(out).toContain('EXIT TO MENU?')
-    expect(out).not.toContain('Trump')   // original body suppressed
-    expect(out).toContain('Swipe down again to confirm')
-  })
-
-  it('overlay=quit-app replaces body with the quit prompt', () => {
-    const out = composeGlassesFrame({
-      gameName: 'Hearts',
-      frame: FRAME,
-      overlay: { kind: 'quit-app' },
-    })
-    expect(out).toContain('QUIT APP?')
-    expect(out).not.toContain('Trump')
-  })
-
-  it('overlay footer is the confirm hint, not the game controlHint', () => {
-    const out = composeGlassesFrame({
-      gameName: 'Hearts',
-      frame: FRAME,
-      overlay: { kind: 'exit-to-menu' },
-    })
-    expect(out).toContain('[swipe↓] confirm')
-    expect(out).not.toContain('[swipe] sel  [tap] play')
+  it('handles a frame without a banner cleanly', () => {
+    const out = composeGlassesFrame({ gameName: 'Hearts', frame: FRAME })
+    expect(out).not.toContain('***')
   })
 })

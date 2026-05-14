@@ -157,40 +157,24 @@ Three asterisks each side, no other decoration. Banner is a body line; the foote
 
 ### Modal overlays
 
-Two overlays the platform owns:
-
-**EXIT prompt (when user swipes down once in-game):**
-```
-EXIT TO MENU?
-
-Swipe down again to confirm
-Or wait to cancel
-```
-Auto-cancels after 2 s if no second swipe.
-
-**Quit-app prompt (when user swipes down once in launcher):**
-```
-QUIT APP?
-
-Swipe down again to confirm
-Or wait to cancel
-```
-
-Same 2 s cancel window. Wording differs only in the action (`MENU` vs `APP`).
+One overlay the platform owns: the **end-of-hand banner** (see § 1.10 below). Mid-game "exit to menu" and "quit app" are **phone-side buttons only** — not glasses gestures. See § 2 for the reasoning.
 
 ## 2. Gestures
 
 | Gesture | In-game | In-launcher |
 |---|---|---|
-| Single tap | Primary action (play card, hit, deal, etc.) | (no-op — avoids accidental selection) |
-| Double tap | Secondary action (pass, double-down, "next hand" at end-of-hand) | Launch selected game |
-| Swipe up | Cursor up / previous option | Previous game |
-| Swipe down | Cursor down / next option | Next game |
-| Swipe down ×2 within 2 s | Confirm "exit to menu" | Confirm "quit app" |
+| Single tap | Primary action (play card, hit, deal, etc.) | Launch the cursored game |
+| Double tap | Secondary action (pass, double-down, "next hand" at end-of-hand, "back to menu" at game-end) | (unused — reserved for future use) |
+| Swipe up | Cursor up / previous option | Previous game in the list |
+| Swipe down | Cursor down / next option | Next game in the list |
 
-The same gesture (swipe-down + swipe-down) has context-dependent meaning: in-game it exits to the launcher, in-launcher it exits the app. The 2 s confirmation window is consistent. This pattern is borrowed from Hands Free Lift's existing exit flow — known to work.
+**Games own the entire glasses gesture surface during play.** The platform does not intercept anything mid-game. This matches how the existing card games (Hearts, Spades, Euchre) already work — they use swipe-up/down to navigate the hand cursor, so reserving those for platform-level use would force a port-time rewrite of every game's input model.
 
-**Reserved for the platform:** swipe-down-once never means anything in-game except "show exit prompt." Games must not bind it. The platform consumes the gesture and shows the overlay; the game's `handleGlassesInput` is not called.
+**"Exit to menu" mid-game is phone-side only.** Each game's phone panel has an `End game` button. Reasoning: card games naturally pause between hands. A mid-hand exit is rare. Hands-free play with glasses doesn't need a glasses-side bail-out for the rare interrupt case — the user can pull out their phone. Revisit if real play shows this is too friction-heavy.
+
+**"Quit app" is also phone-side only.** EvenHub host provides this navigation already (back button in its UI chrome). The pack doesn't need to duplicate.
+
+**Game-end → launcher.** Every game's terminal state (someone won) should show a `[2x] back to menu` footer. Double-tap in that terminal state fires the game's `ctx.endGame()`, the platform tears down the game module, the launcher reappears.
 
 ## 3. Phone WebView (companion app)
 

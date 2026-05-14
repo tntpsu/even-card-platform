@@ -14,8 +14,9 @@ export type GlassesGesture =
   | { kind: 'double-tap' }
   | { kind: 'swipe-up' }
   | { kind: 'swipe-down' }
-// Note: STYLE.md § 2 reserves consecutive swipe-down for the platform's
-// exit prompt. Games will not see swipe-down events.
+// Per STYLE.md § 2: games own the entire glasses gesture surface during
+// play. The platform does not intercept any gesture mid-game. Exit-to-menu
+// and quit-app are phone-side buttons, not glasses gestures.
 
 export interface GlassesFrame {
   /** Score string per STYLE.md § 1.4. */
