@@ -21,6 +21,9 @@ export { freshDeck, deckFromRanks, shuffle, deal, drawTop } from './deck'
 export { renderHandRow } from './hand-row'
 export type { HandRowOptions } from './hand-row'
 
+export { renderHand, sortBySuit, rowFitsDisplay, DISPLAY_WIDTH_PX } from './hand'
+export type { HandOptions } from './hand'
+
 export { renderPlusTrick } from './plus-trick'
 export type { Position, PlusTrickPlay, PlusTrickOptions } from './plus-trick'
 

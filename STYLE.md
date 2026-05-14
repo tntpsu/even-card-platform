@@ -86,17 +86,40 @@ All four glyphs measure 20 px in the firmware font, so a row of cards aligns reg
 
 ### Cards in hands
 
-A hand is rendered horizontally with a `▲` cursor on the next line under the active card. From the Euchre v0.3 pattern, pixel-centered using `@evenrealities/pretext` for proportional-font width measurement.
+A hand is rendered horizontally with a `▲` cursor on the next line under the active card. Pixel-centered using `@evenrealities/pretext` for proportional-font width measurement.
+
+**Small hands (≤ 7 cards)** — single row, the original Euchre v0.3 pattern:
 
 ```
 J♦  (Q♣)   Q♠   A♦   K♥        ← cards row
      ▲                          ← cursor row, centered under Q♣
 ```
 
+**Large hands (> 7 cards, e.g. Hearts/Spades 13, Gin Rummy 10)** — split into two rows so the layout fits the 576 px G2 display. Cursor row appears immediately below the row containing the active card:
+
+```
+2♠ 5♠ 8♠ (J♠) A♠ 4♥ 9♥       ← row 1
+              ▲                ← cursor row (only if cursor in row 1)
+Q♥ 3♦ K♦ 4♣ 7♣ (J♣)           ← row 2
+                                ← cursor row (only if cursor in row 2)
+```
+
+Total up to 4 lines. Empty cursor rows are omitted; the renderer's output is variable-length 1–4 lines depending on hand size + cursor position.
+
 - **Legal play**: `7♠` (rank + suit, no decoration)
 - **Illegal play right now** (e.g. must follow suit): `(7♠)` with literal parens
 - **Selected via cursor**: indicated by the `▲` on the cursor row, not by decoration on the card itself
-- **PR / star card** (when applicable, e.g. trump): no decoration in v1; revisit later
+
+**Sort order (large hands)**. Hands of >7 cards must be sorted by suit (♠ ♥ ♦ ♣) then by rank ascending. The platform exports `sortBySuit(hand)` for this. Sorting makes the cursor traverse a predictable path (suit clusters) instead of the random deal order — without this, swipe-through-hand feels chaotic on Hearts/Spades.
+
+Small hands (≤ 5 cards in Euchre) MAY remain unsorted — the random deal order is short enough not to feel chaotic, and sorting would mask the strategic significance of card order in some games. Sort by default for new games; opt out only with a documented reason.
+
+**Platform exports**:
+- `renderHand({ hand, cursorIdx, legal, maxPerRow? })` — auto single/multi-row. Default `maxPerRow = 7`.
+- `sortBySuit(hand)` — canonical ♠♥♦♣ + rank-ascending order.
+- `rowFitsDisplay(hand, legal?)` — diagnostic, returns true iff a single-row render fits 576 px.
+
+The older `renderHandRow` (always single-row) is kept for the simple case where the game knows the hand is always small. New games should use `renderHand` unless they have a specific reason otherwise.
 
 ### Markers
 
