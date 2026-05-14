@@ -32,3 +32,6 @@ export type { BridgeStorageRuntime } from './storage'
 
 export { Launcher } from './launcher'
 export type { LauncherOpts, LauncherAction } from './launcher'
+
+export { Runtime } from './runtime'
+export type { RuntimeOpts } from './runtime'
