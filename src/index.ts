@@ -23,3 +23,9 @@ export type { HandRowOptions } from './hand-row'
 
 export { renderPlusTrick } from './plus-trick'
 export type { Position, PlusTrickPlay, PlusTrickOptions } from './plus-trick'
+
+export { composeGlassesFrame } from './frame'
+export type { ComposeOpts, Overlay } from './frame'
+
+export { makeGameStorage, makePlatformStorage } from './storage'
+export type { BridgeStorageRuntime } from './storage'
