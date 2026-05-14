@@ -29,3 +29,6 @@ export type { ComposeOpts } from './frame'
 
 export { makeGameStorage, makePlatformStorage } from './storage'
 export type { BridgeStorageRuntime } from './storage'
+
+export { Launcher } from './launcher'
+export type { LauncherOpts, LauncherAction } from './launcher'
