@@ -43,6 +43,11 @@ export interface PlatformContext {
   /** Fire when the user has explicitly ended the game via in-game UI
    *  (not the platform's exit gesture). Triggers the end-of-game flow. */
   endGame(): void
+  /** Ask the runtime to re-render. Use this when the game's state
+   *  changes from inside an async tick (paced AI plays, trick-linger
+   *  timeouts, animations) so the glasses display reflects it without
+   *  waiting for the next gesture. */
+  requestRender(): void
 }
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
@@ -65,6 +70,10 @@ export interface Game {
    *  where applicable; otherwise a recognizable letter or symbol. */
   glyph: string
   init(ctx: PlatformContext): GameHandle
+  /** Optional: HTML for the phone-side "How to play" disclosure. Static
+   *  (doesn't depend on game state) — that's why it lives on Game and
+   *  not on GameHandle. Trusted markup; main.ts will innerHTML this. */
+  renderPhoneRules?(): string
 }
 
 export interface GameHandle {
@@ -73,8 +82,8 @@ export interface GameHandle {
   handlePhoneEvent(ev: PhoneEvent): void
   /** Called when the platform tears down the game. */
   destroy(): void
-  /** Optional: markdown rules text for the "How to play" disclosure. */
-  renderPhoneRules?(): string
-  /** Optional: per-game settings HTML. */
+  /** Optional: per-game settings HTML. Lives on the handle (not the
+   *  Game) because settings often reflect current state (e.g. active
+   *  difficulty, target score for this match). */
   renderPhoneSettings?(): string
 }

@@ -139,6 +139,7 @@ export class Runtime {
       storage: makeGameStorage(this.bridge, def.id),
       difficulty: this.difficulty,
       endGame: () => { this.exitToMenu() },
+      requestRender: () => { this.render() },
     }
     this.currentDef = def
     this.current = def.init(ctx)
