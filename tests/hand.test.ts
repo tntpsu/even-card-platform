@@ -18,14 +18,19 @@ function pick(count: number): Card[] {
 }
 
 describe('renderHand — single row for small hands', () => {
-  it('5 cards (Euchre) renders as a single row', () => {
+  it('5 cards (Euchre) renders as a single row + cursor row (v0.1.3: row-lock)', () => {
     const out = renderHand({ hand: pick(5), cursorIdx: 0 })
-    expect(out.length).toBeLessThanOrEqual(2)   // cards row + cursor row
+    expect(out).toHaveLength(2) // always 2: cards + cursor (or blank cursor)
+    expect(out[1]).toContain('▲')
   })
 
-  it('cursor row is omitted when cursorIdx is -1', () => {
+  it('cursor row is blank when cursorIdx is -1 (rows stay locked, v0.1.3)', () => {
+    // v0.1.3: rows lock across cursor on/off cycle to prevent 1↔2 line pop.
+    // Field feedback from CardPack v0.2.0 Euchre play.
     const out = renderHand({ hand: pick(5), cursorIdx: -1 })
-    expect(out.length).toBe(1)
+    expect(out).toHaveLength(2)
+    expect(out[1]).toBe('')
+    expect(out[0]).not.toContain('▲')
   })
 })
 

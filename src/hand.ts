@@ -65,8 +65,12 @@ export function renderHand(opts: HandOptions): string[] {
   if (hand.length === 0) return ['']
 
   if (hand.length <= maxPerRow) {
+    // Always emit a cursor row (blank when no cursor) so the layout
+    // doesn't pop 1 line → 2 as the cursor disappears between turns.
+    // Same fix as the multi-row 'between' row-lock added in v0.1.2;
+    // applied here for single-row (Euchre 5-card etc.) in v0.1.3.
     const [cards, cur] = renderOneRow(hand, cursorIdx, legal)
-    return cur ? [cards, cur] : [cards]
+    return [cards, cur]
   }
 
   // Multi-row split. Round up so row1 has the extra when odd.
