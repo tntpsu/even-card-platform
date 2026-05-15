@@ -1,6 +1,6 @@
 {
   "name": "even-card-platform",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared platform (chrome, launcher, card primitives, style guide) for Even Realities G2 card-game packs. Consumed by CardPack and HouseGames.",
   "private": true,
   "type": "module",

@@ -37,16 +37,40 @@ describe('renderHand — multi-row split for large hands', () => {
     expect(out.length).toBeLessThanOrEqual(4)
   })
 
-  it('cursor in row 1 produces a cursor row after row 1, not row 2', () => {
+  it('default `between` mode: cursor in row 1 → ▲ between rows', () => {
     const out = renderHand({ hand: pick(13), cursorIdx: 2 })
-    // Lines: row1cards, row1cursor, row2cards (no row2cursor since cursor is in row 1)
+    // Lines: row1cards, between-cursor (▲), row2cards
+    expect(out).toHaveLength(3)
+    expect(out[1]).toContain('▲')
+    expect(out[1]).not.toContain('▼')
+    expect(out[2]).not.toContain('▲')
+    expect(out[2]).not.toContain('▼')
+  })
+
+  it('default `between` mode: cursor in row 2 → ▼ between rows', () => {
+    const out = renderHand({ hand: pick(13), cursorIdx: 10 })
+    // Lines: row1cards, between-cursor (▼), row2cards
+    expect(out).toHaveLength(3)
+    expect(out[1]).toContain('▼')
+    expect(out[1]).not.toContain('▲')
+    expect(out[2]).not.toContain('▼')
+    expect(out[2]).not.toContain('▲')
+  })
+
+  it('default `between` mode: cursorIdx=-1 omits the cursor row entirely', () => {
+    const out = renderHand({ hand: pick(13), cursorIdx: -1 })
+    expect(out).toHaveLength(2)
+    expect(out.some(line => line.includes('▲') || line.includes('▼'))).toBe(false)
+  })
+
+  it('legacy `below` mode: cursor in row 1 → ▲ under row 1', () => {
+    const out = renderHand({ hand: pick(13), cursorIdx: 2, multiRowCursor: 'below' })
     expect(out[1]).toContain('▲')
     expect(out[2]).not.toContain('▲')
   })
 
-  it('cursor in row 2 produces a cursor row after row 2, not row 1', () => {
-    const out = renderHand({ hand: pick(13), cursorIdx: 10 })
-    // Lines: row1cards, row2cards, row2cursor (no row1cursor)
+  it('legacy `below` mode: cursor in row 2 → ▲ under row 2', () => {
+    const out = renderHand({ hand: pick(13), cursorIdx: 10, multiRowCursor: 'below' })
     expect(out[1]).not.toContain('▲')
     expect(out[2]).toContain('▲')
   })
