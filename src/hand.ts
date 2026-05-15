@@ -88,6 +88,10 @@ export function renderHand(opts: HandOptions): string[] {
   }
 
   // 'between' mode — cursor anchored between the two rows.
+  // The cursor row is ALWAYS emitted (blank when no active cursor) so the
+  // row positions stay locked across the human-turn → AI-turn → linger
+  // → human-turn cycle. Without this, the layout pops 3 → 2 → 3 lines as
+  // the cursor appears and disappears, which is jarring on glasses.
   const [r1c, , row1Centers] = renderOneRow(row1, -1, legal)
   const [r2c, , row2Centers] = renderOneRow(row2, -1, legal)
   const lines: string[] = [r1c]
@@ -97,6 +101,8 @@ export function renderHand(opts: HandOptions): string[] {
     } else {
       lines.push(buildCursorLine(row2Centers[cursorIdx - halfway]!, CURSOR_DOWN))
     }
+  } else {
+    lines.push('') // blank cursor row — preserves vertical layout
   }
   lines.push(r2c)
   return lines

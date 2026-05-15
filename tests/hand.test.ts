@@ -57,9 +57,13 @@ describe('renderHand — multi-row split for large hands', () => {
     expect(out[2]).not.toContain('▲')
   })
 
-  it('default `between` mode: cursorIdx=-1 omits the cursor row entirely', () => {
+  it('default `between` mode: cursorIdx=-1 keeps 3 lines (rows locked, blank cursor row)', () => {
+    // v0.1.2: row positions must stay locked across the human-turn →
+    // AI-turn cycle so the layout doesn't pop 3 ↔ 2 lines as the cursor
+    // appears and disappears. Field feedback from CardPack v0.1.6.
     const out = renderHand({ hand: pick(13), cursorIdx: -1 })
-    expect(out).toHaveLength(2)
+    expect(out).toHaveLength(3)
+    expect(out[1]).toBe('') // blank cursor row
     expect(out.some(line => line.includes('▲') || line.includes('▼'))).toBe(false)
   })
 
