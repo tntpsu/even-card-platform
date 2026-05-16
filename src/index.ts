@@ -27,6 +27,9 @@ export type { HandOptions } from './hand'
 export { renderPlusTrick } from './plus-trick'
 export type { Position, PlusTrickPlay, PlusTrickOptions } from './plus-trick'
 
+export { renderPlusBid } from './plus-bid'
+export type { PlusBidOptions } from './plus-bid'
+
 export { composeGlassesFrame } from './frame'
 export type { ComposeOpts } from './frame'
 

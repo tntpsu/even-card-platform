@@ -48,8 +48,12 @@ export function renderPlusTrick(opts: PlusTrickOptions): string[] {
 }
 
 function centerPx(text: string, widthPx: number): string {
-  const textPx = getTextWidth(text)
-  const padPx = Math.max(0, widthPx - textPx) / 2
+  // Letter-anchored centering (v0.2.0): center the FIRST CHAR (the position
+  // letter N or S) at widthPx/2 — not the whole string. Otherwise rows
+  // with long marker text (e.g., "S(me,D,▶)" vs "N") drift the position
+  // letters apart, making the cross look bent. Markers hang to the right.
+  const firstCharPx = getTextWidth(text.slice(0, 1))
+  const padPx = Math.max(0, (widthPx - firstCharPx) / 2)
   const spaces = Math.round(padPx / SPACE_PX)
   return ' '.repeat(spaces) + text
 }
